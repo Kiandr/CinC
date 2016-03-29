@@ -1,0 +1,275 @@
+% This file has been slightly modified from Hans Kestler's original to reflect
+% changes in the CinC style file (cinc.cls), in which the width of the text
+% columns has been slightly reduced.  Accordingly, the size of figure 2 has
+% been reduced so that the entire paper will fit into four pages as in the
+% original. --GBM
+\documentclass[twocolumn]{cinc}
+
+
+\usepackage{epsfig}
+
+
+
+\def\IR{{\rm I\! R}}
+\def\IN{{\rm I\! N}}
+\def\IF{{\rm I\! F}}
+\def\IP{{\rm I\! P}}
+\def\IK{{\rm I\! K}}
+\def\IZ{{\rm Z\!\! Z}}
+\def\IQ{\,{\rm Q\!\!\! \vrule width 0.5pt height 7pt depth 0pt }\;\,}
+\def\IC{\,{\rm C\!\!\!\>\! \vrule width 0.5pt height 7pt depth 0pt }\;\,}
+\def\argmin{\rm argmin}
+
+\sloppy
+
+
+
+\begin{document}
+
+\bibliographystyle{cinc}
+
+\title{A Feasibility Study of Classification of Photoplethysmography \\[-.4ex] of Signal Averaged
+High -- Resolution ECGs}
+\author{HA~Kestler$^{1,2}$, F Schwenker$^1$, G Hafner$^1$, V~Hombach$^2$, 
+        G~Palm$^1$, M~H{\"o}her$^2$ \\[1em]
+        $^1$Neural Information Processing, University of Ulm,  Germany \\[.25ex]
+        $^2$Medicine II -- Cardiology, University Hospital Ulm, Germany\\[1em]
+}
+
+\maketitle
+
+
+
+
+
+
+\begin{abstract}
+Classification of signal averaged ECGs is divided into two phases: (a) QRS--onset and QRS--offset
+determination and (b) categorization based on three derived features:
+QRS duration (QRSd), root mean square of the terminal 40ms of the QRS (RMS) and the terminal
+low amplitude signal of the QRS below 40$\mu$V (LAS). Purpose of this feasibility study was
+the neural realization of each of these phases and the comparison of the different
+approaches. Both steps were realized with the neural network 
+and the standard approach. Four combinations of the methods are possible. 
+These were tested on 95 high--resolution signal averaged ECG recordings from 51 healthy volunteers
+and 44 patients with coronary artery disease.
+Using a neural network in the classification phase increased the sensitivity of the whole
+process by approximately 30\% compared to the standard method without the need to visually
+correct the QRS--onset and --offsets. 
+These initial results are very positive but need to be substantiated with further patient data.
+\end{abstract}
+
+
+\section{Introduction}
+
+High-resolution electrocardiography is used for the detection of fractionated micropotentials, which serve
+as a noninvasive marker for an arrhythmogenic substrate and for an increased risk for malignant 
+ventricular tachy\-arrhythmias.
+Ventricular late potential analysis (VLP) is herein the generally accepted noninvasive method to identify patients
+with an increased risk for reentrant ventricular tachycardias and for risk stratification after myocardial
+infarction \cite{med:gomes89,med:hoher91,med:simson81}. 
+Techniques commonly applied in this purely time--domain based analysis are
+signal-averaging, high-pass filtering and late potential analysis of the terminal part of the QRS complex.
+The assessment of VLP's depends on three empirically defined limits of the total duration of the QRS and the 
+duration and amplitude of the terminal low--amplitude portion of the QRS complex \cite{med:breithardt86,med:breithardt91}.
+
+In this study we investigated the neural realization of the time domain based analysis.
+As the process of decision making is separated into two phases: (a) feature extraction and (b) categorization
+these two phases were modeled with two different multilayer perceptron neural networks. 
+This results in four different combinations of the standard and neural approaches. These are compared.
+
+
+
+\section{Notation}
+
+A formalized description of the three features used for time domain analysis of signal averaged
+ECGs is as follows:
+
+\vspace*{-2cm}
+\centerline{\epsfig{file=figures/qrs1, width=10cm}}
+\vspace*{-7.5cm}        
+{\small
+\begin{itemize}
+\item QRSd (QRS duration):
+\[
+ QRSD := QRS_{offset} - QRS_{onset}
+\]
+\item RMS (Time A: $A:= QRS_{offset} - 40ms$): 
+\[
+RMS := \sqrt{\frac{1}{QRS_{offset} - A} \sum_{i=A}^{QRS_{offset}} V_i^2}
+\]
+\item LAS (Duration of the low amplitude signal below 40$\mu$V):
+\[
+LAS := QRS_{offset} - argmax \{ i \; | \; V_i \ge 40 \mu V \}
+\] 
+\end{itemize}}
+    
+
+\section{Subject data}
+
+We compared a group of 51 healthy subjects (group A) with 44 cardiac patients 
+at a high risk for malignant ventricular arrhythmias (group B, VT patients). 
+All healthy 
+volunteers (mean age 24.0$\pm$4.1 years) had a normal resting ECG and a normal 
+echocardiogram, and no cardiac symptoms or coronary risk factors. 
+The patients with a
+high--risk for malignant ventricular arrhythmias (mean age 61.2$\pm$8.9 years) were selected 
+from our electrophysiologic database. Inclusion criteria were the presence of coronary 
+artery disease, a previous myocardial infarction, a history of at least one symptomatic 
+arrhythmia, and inducible sustained ventricular tachycardia ($>$ 30 seconds) at electrophysiologic 
+testing. Patients with bundle branch block or atrial fibrillation were excluded.
+All patients of group B underwent coronary angiography and programmed right ventricular 
+stimulation due to clinical indications. Stimulation was done from the right apex and the 
+right outflow tract. The stimulation protocol included up to 3 extrastimuli during sinus 
+rhythm and at baseline pacing with a cycle length of 500 ms, and a maximum of 2 extrastimuli 
+at baseline pacing with cycle lengths of 430 ms, 370 ms, and 330 ms.
+Group B consisted of 10 patients with single vessel disease, 17 patients with double vessel 
+disease, and 17 patients with triple vessel coronary artery disease. 
+Nineteen patients had a previous posterior 
+infarction, 14 patients had a previous anterior infarction, and 11 patients had both a previous 
+anterior and a previous posterior infarction. Mean left ventricular ejection fraction 
+was 44.0\%$\pm$14.9\%. Forty-one patients had a documented episode of spontaneous, sustained 
+ventricular tachycardia or ventricular fibrillation. Out of the remaining 
+three patients, 1 patient had syncopes 
+and non--sustained ventricular tachycardias on Holter monitoring, and 2 patients had syncopes 
+of presumed cardiac origin.
+ 
+
+
+\section{Methods}
+
+
+\subsection{ECG recordings}
+High--resolution signal averaged electrocardiograms  
+were recorded during sinus rhythm from bipolar orthogonal $X$, $Y$, $Z$ leads. 
+Before ECG recording antiarrhythmic drugs were stopped for at least four half--lives.
+The skin was carefully prepared and recordings were done with the subjects in reclining 
+position in a Faraday cage. Sampling rate was 2000 Hz, A/D resolution was 16 bit, and an 
+analog bandpass filter of 0.05-300 Hz was used (anti--aliasing).  The ECG's were recorded 
+with the Predictor system (Corasonix Inc., Oklahoma, USA).   
+The three leads were combined into a vectormagnitude signal $V=\sqrt{X^2 + Y^2 + Z^2}$ and
+bidirectionally filtered with a 4--pole Butterworth filter (40--250 Hz). 
+
+
+
+\subsection{Overview}
+
+An overview of the evaluation process is given in Fig. \ref{overview}. From the signal averaged ECG
+estimated and visually corrected QRS--onset and --offset points are used as target values for the 
+training of the feature extraction multilayer perceptron. This neural net is trained to predict these
+points from the bidirectional filtered ECG. From these points the features QRSd, LAS and RMS are
+calculated. These serve as the input to the next stage. The standard approach of obtaining these
+values consists of inspecting and if necessary correcting an estimation given by a conventional
+signal processing algorithm, in this case the Predictor$^\copyright$ system, see \cite{med:breithardt91}. 
+The difficulty with this approach lies in finding the QRS--offset. 
+
+The next stage consists of categorization of the ECGs based upon the three extracted features. This
+is done by another multilayer perceptron network trained to predict the correct group status, see Section 2.
+The same is done with empirically found and defined limits of QRSd, LAS and RMS \cite{med:breithardt91}.
+More formally, the standard method classifies into VLP positive if 2 of 3 
+criteria are met: QRSd $>$ 114ms, RMS $<$ 20$\mu$V, LAS $>$ 38ms. Evaluation of this categorization
+is against group status.
+
+\begin{figure*}[h] 
+\vspace*{-2cm}
+\centerline{\epsfig{file=figures/wholesys2a, width=17cm, clip=}}
+\caption{Overview of the decision process incorporating neural and standard methods.}
+\label{overview} %\vspace*{3mm} 
+\end{figure*}
+
+
+
+\subsection{Multilayer perceptron}
+
+It has been proved that multilayer perceptron (MLP) networks built of 3 layers
+of artificial neurons are capable of approximating any continuous function.
+Together with the backpropagation algorithm for weight adaptation MLP's
+are powerful schemes for function approximation and categorization \cite{nn:haykin99}.
+\begin{figure}[ht]
+\vspace {-.5cm} 
+\centerline{\epsfig{file=figures/nn2c, width=6cm}}
+\vspace*{.5cm}
+\centerline{\hspace*{0cm}\epsfig{file=figures/nn2d, width=6cm}}
+\vspace{.3cm}
+\caption{Multilayer perceptron net and backpropagation.}
+\label{mlp1} \vspace*{-15mm} 
+\end{figure}
+
+
+\clearpage
+
+
+
+\subsection{Training of QRS--onset and --offset}
+
+The training of the feature extracting MLP was done by sliding an empirically
+determined window of 16ms, i.e. 32 inputs, over the bidirectionally filtered QRS complex.
+The target value was either a "1" if the QRS--onset or --offset was inside the window
+or a  "0" if it was outside. This results in a balanced training set: ratio of "1" to "0" target values is 2.8.
+The onsets and offsets were visually determined.
+The best performing net was of size 32--8--1. All neurons
+had a Fermi transfer function.
+ 
+\begin{figure}[ht] 
+\centerline{\hspace*{0cm}\epsfig{file=figures/winmove, width=7cm, clip=}}
+\vspace*{-3cm} 
+\caption{Training of the QRS--onset and --offset. MLP input: 32 sample points within the
+input window. MLP target: value of the characteristic function $y(t)$.}
+\label{mlp2} \vspace*{3mm} 
+\end{figure}
+       
+        
+\begin{figure}[ht] 
+\centerline{\hspace*{-5mm}\epsfig{file=figures/snnsout1b, width=5.3cm, height=2cm, clip=}}
+\caption{Sample net output for the QRS--onset, QRS--offset training.}     
+\label{mlp3} \vspace*{3mm} 
+\end{figure}
+
+
+
+\subsection{MLP training with calculated features}
+
+For each QRS complex the three features QRSd, RMS and LAS (see Section 2) were calculated.
+QRS--onset and --offset were either estimated by an expert or by the feature extraction MLP
+network (previous subsection). MLP networks (3 input neurons, 8 hidden neurons and 1 output
+neuron) were trained to predict the patient's group status.
+
+
+
+
+\vspace*{-2mm}
+\section{Results and conclusion}
+
+The classification process of signal averaged ECGs is separated into two phases: (a) feature extraction
+and (b) categorization according to the found feature values. These steps were realized both with the
+neural network (MLP) and the standard approach (STD). Four combinations of the methods are possible.
+Combinations involving a neural network were evaluated applying a 5--fold crossvalidation:
+    %\vspace*{1cm}
+\begin{center}
+\small
+\begin{tabular}{|c||c|c|c|c|c|}\hline
+           & Acc  & Sens & Spec & PPV   & NPV   \\ \hline \hline
+STD \& STD & 0.789     & 0.409       & 0.960       & 0.928 & 0.731 \\ \hline
+MLP \& STD & 0.754     & 0.513       & 0.906       & 0.918 & 0.696 \\ \hline
+STD \& MLP & 0.851     & 0.736       & 0.949       & 0.925 & 0.806 \\ \hline 
+{\bf MLP \& MLP} & {\bf 0.846}     &{\bf 0.745}       & {\bf 0.933}       & {\bf 0.906} & {\bf 0.809}\\ \hline
+\end{tabular}
+\end{center}
+{ This feasibility study gives very positive initial results on using a neural
+network for the classification of signal averaged ECGs. Furthermore the feature extracting MLP
+makes the system independent of a correction of QRS--onset and --offset.}
+
+
+\vspace*{-2mm}
+\bibliography{bib/med,bib/nn}
+
+\begin{correspondence}
+Hans A. Kestler\\
+Dept. of Medicine II / University Hospital Ulm\\
+Robert-Koch-Str. 8 / D-89081 Ulm / Germany\\
+tel./fax: ++49-731-502-4437/4442\\
+h.kestler@ieee.org
+\end{correspondence}
+
+\end{document}
+
